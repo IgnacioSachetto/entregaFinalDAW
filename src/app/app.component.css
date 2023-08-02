@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+.container button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.container .btn-nueva-reserva  {
+  background-color: #23c035;
+
+}
+
+.container .btn-modificar-reservas{
+  background-color: #23c035;
+
+}
+
+
+
+.container button:hover {
+  background-color: #23527c;
+}

@@ -1,0 +1,77 @@
+<h2>Modificar Reserva</h2>
+
+<form class="form-inline">
+  <div class="form-item form-group">
+    <label for="filtroEspacio">Filtrar por Espacio:</label>
+    <input type="text" id="filtroEspacio" name="filtroEspacio" class="form-control">
+  </div>
+  <br>
+  <button type="submit" class="btn btn-primary">Buscar</button>
+
+  <div class="form-item form-group">
+    <label for="filtroReservante">Filtrar por Reservante:</label>
+    <input type="text" id="filtroReservante" name="filtroReservante" class="form-control">
+  </div>
+  <br>
+  <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Fecha Reserva</th>
+      <th>Fecha Fin</th>
+      <th>Motivo de Reserva</th>
+      <th>Capacidad Requerida</th>
+      <th>Espacio</th>
+      <th>Reservante</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>
+        <button type="button" class="btn btn-primary">Modificar</button>
+        <button type="button" class="btn btn-danger">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!--
+  <form (submit)="buscarReservas()">
+  <div class="form-item">
+    <label for="filtroEspacio">Filtrar por Espacio:</label>
+    <input type="text" id="filtroEspacio" [(ngModel)]="filtroEspacio">
+  </div>
+  <div class="form-item">
+    <label for="filtroReservante">Filtrar por Reservante:</label>
+    <input type="text" id="filtroReservante" [(ngModel)]="filtroReservante">
+  </div>
+  <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+    <tbody>
+    <tr *ngFor="let reserva of reservas">
+      <td>{{ reserva.fechaReserva }}</td>
+      <td>{{ reserva.fechaFin }}</td>
+      <td>{{ reserva.motivoReserva }}</td>
+      <td>{{ reserva.capacidadRequerida }}</td>
+      <td>{{ reserva.espacio }}</td>
+      <td>{{ reserva.reservante }}</td>
+      <td>{{ reserva.estado }}</td>
+      <td>
+        <button type="button" class="btn btn-primary">Modificar</button>
+        <button type="button" class="btn btn-danger">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+-->
