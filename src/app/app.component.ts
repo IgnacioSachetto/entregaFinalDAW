@@ -16,21 +16,9 @@ export class AppComponent {
   nombres = [];
   mostrarComponenteNuevoEspacio: boolean = false;
 
-  public aumentarEdad() {
-    this.servicioUsuario.getDatos().subscribe(
-      (rta) => {
-        this.nombres = rta['data'];
-      },
-      (error) => {
-        // Manejo de error
-      }
-    );
-    this.edad++;
-  }
 
-  public disminuirEdad() {
-    this.edad--;
-  }
+
+
 
   redirigirANuevoEspacio() {
     this.router.navigate(['nuevo-espacio']);

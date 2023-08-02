@@ -3,18 +3,17 @@
 <form class="form-inline">
   <div class="form-item form-group">
     <label for="filtroLegajo">Filtrar por Legajo UTN:</label>
-    <input type="text" id="filtroEspacio" name="filtroLegajo" class="form-control">
+    <input type="text" id="filtroLegajo" name="filtroLegajo" class="form-control">
   </div>
-  <br>
-  <button type="submit" class="btn btn-primary">Buscar</button>
+  <button type="button" class="btn btn-primary" (click)="buscarPorLegajo()">Buscar</button>
 
   <div class="form-item form-group">
     <label for="filtroDNI">Filtrar por DNI:</label>
     <input type="text" id="filtroDNI" name="filtroDNI" class="form-control">
   </div>
-  <br>
-  <button type="submit" class="btn btn-primary">Buscar</button>
+  <button type="button" class="btn btn-primary" (click)="buscarPorDNI()">Buscar</button>
 </form>
+
 <table class="table">
   <thead>
     <tr>
@@ -27,15 +26,17 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+    <tr *ngFor="let usuario of usuarios">
+      <td>{{ usuario.nombre }}</td>
+      <td>{{ usuario.apellido }}</td>
+      <td>{{ usuario.legajo }}</td>
+      <td>{{ usuario.dni }}</td>
+      <td>{{ usuario.email }}</td>
       <td>
-        <button type="button" class="btn btn-primary">Modificar</button>
-        <button type="button" class="btn btn-danger">Eliminar</button>
+        <button *ngIf="!modoEditar" type="button" class="btn btn-primary" (click)="editarUsuario(usuario)">Modificar</button>
+        <button *ngIf="!modoEditar" type="button" class="btn btn-danger" (click)="eliminarUsuario(usuario)">Eliminar</button>
+        <button *ngIf="modoEditar" type="button" class="btn btn-success" (click)="guardarUsuario(usuario)">Guardar</button>
+        <button *ngIf="modoEditar" type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
       </td>
     </tr>
   </tbody>
