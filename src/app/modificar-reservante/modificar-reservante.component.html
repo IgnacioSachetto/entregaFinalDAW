@@ -26,18 +26,26 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let usuario of usuarios">
-      <td>{{ usuario.nombre }}</td>
-      <td>{{ usuario.apellido }}</td>
-      <td>{{ usuario.legajo }}</td>
-      <td>{{ usuario.dni }}</td>
-      <td>{{ usuario.email }}</td>
-      <td>
-        <button *ngIf="!modoEditar" type="button" class="btn btn-primary" (click)="editarUsuario(usuario)">Modificar</button>
-        <button *ngIf="!modoEditar" type="button" class="btn btn-danger" (click)="eliminarUsuario(usuario)">Eliminar</button>
-        <button *ngIf="modoEditar" type="button" class="btn btn-success" (click)="guardarUsuario(usuario)">Guardar</button>
-        <button *ngIf="modoEditar" type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
-      </td>
-    </tr>
+    <ng-container *ngIf="usuarios.length > 0; else noReservantes">
+      <tr *ngFor="let usuario of usuarios">
+        <td>{{ usuario.nombre }}</td>
+        <td>{{ usuario.apellido }}</td>
+        <td>{{ usuario.legajo }}</td>
+        <td>{{ usuario.dni }}</td>
+        <td>{{ usuario.email }}</td>
+        <td>
+          <button *ngIf="!modoEditar" type="button" class="btn btn-primary" (click)="editarUsuario(usuario)">Modificar</button>
+          <button *ngIf="!modoEditar" type="button" class="btn btn-danger" (click)="eliminarUsuario(usuario)">Eliminar</button>
+          <button *ngIf="modoEditar" type="button" class="btn btn-success" (click)="guardarUsuario(usuario)">Guardar</button>
+          <button *ngIf="modoEditar" type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+        </td>
+      </tr>
+    </ng-container>
   </tbody>
 </table>
+
+<ng-template #noReservantes>
+  <tr>
+    <td colspan="6">No hay reservantes disponibles.</td>
+  </tr>
+</ng-template>

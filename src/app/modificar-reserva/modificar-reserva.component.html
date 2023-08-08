@@ -3,17 +3,15 @@
 <form class="form-inline">
   <div class="form-item form-group">
     <label for="filtroEspacio">Filtrar por Espacio:</label>
-    <input type="text" id="filtroEspacio" name="filtroEspacio" class="form-control">
+    <input type="text" id="filtroEspacio" name="filtroEspacio" class="form-control" [(ngModel)]="filtroEspacio">
   </div>
-  <br>
-  <button type="submit" class="btn btn-primary">Buscar</button>
+  <button type="button" class="btn btn-primary" (click)="buscarReservas()">Buscar</button>
 
   <div class="form-item form-group">
     <label for="filtroReservante">Filtrar por Reservante:</label>
-    <input type="text" id="filtroReservante" name="filtroReservante" class="form-control">
+    <input type="text" id="filtroReservante" name="filtroReservante" class="form-control" [(ngModel)]="filtroReservante">
   </div>
-  <br>
-  <button type="submit" class="btn btn-primary">Buscar</button>
+  <button type="button" class="btn btn-primary" (click)="buscarReservas()">Buscar</button>
 </form>
 
 <table class="table">
@@ -30,48 +28,26 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>
-        <button type="button" class="btn btn-primary">Modificar</button>
-        <button type="button" class="btn btn-danger">Eliminar</button>
-      </td>
-    </tr>
+    <ng-container *ngIf="reservas.length > 0; else noReservas">
+      <tr *ngFor="let reserva of reservas">
+        <td>{{ reserva.fechaReserva }}</td>
+        <td>{{ reserva.fechaFin }}</td>
+        <td>{{ reserva.motivoReserva }}</td>
+        <td>{{ reserva.capacidadRequerida }}</td>
+        <td>{{ reserva.espacio }}</td>
+        <td>{{ reserva.reservante }}</td>
+        <td>{{ reserva.estado }}</td>
+        <td>
+          <button type="button" class="btn btn-primary" (click)="modificarReserva(reserva.id)">Modificar</button>
+          <button type="button" class="btn btn-danger" (click)="eliminarReserva(reserva.id)">Eliminar</button>
+        </td>
+      </tr>
+    </ng-container>
   </tbody>
 </table>
 
-<!--
-  <form (submit)="buscarReservas()">
-  <div class="form-item">
-    <label for="filtroEspacio">Filtrar por Espacio:</label>
-    <input type="text" id="filtroEspacio" [(ngModel)]="filtroEspacio">
-  </div>
-  <div class="form-item">
-    <label for="filtroReservante">Filtrar por Reservante:</label>
-    <input type="text" id="filtroReservante" [(ngModel)]="filtroReservante">
-  </div>
-  <button type="submit" class="btn btn-primary">Buscar</button>
-</form>
-
-    <tbody>
-    <tr *ngFor="let reserva of reservas">
-      <td>{{ reserva.fechaReserva }}</td>
-      <td>{{ reserva.fechaFin }}</td>
-      <td>{{ reserva.motivoReserva }}</td>
-      <td>{{ reserva.capacidadRequerida }}</td>
-      <td>{{ reserva.espacio }}</td>
-      <td>{{ reserva.reservante }}</td>
-      <td>{{ reserva.estado }}</td>
-      <td>
-        <button type="button" class="btn btn-primary">Modificar</button>
-        <button type="button" class="btn btn-danger">Eliminar</button>
-      </td>
-    </tr>
-  </tbody>
--->
+<ng-template #noReservas>
+  <tr>
+    <td colspan="8">No hay reservas disponibles.</td>
+  </tr>
+</ng-template>

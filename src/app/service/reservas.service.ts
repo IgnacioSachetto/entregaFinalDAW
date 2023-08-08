@@ -3,40 +3,40 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ReservasService {
-    private urlBase: string = 'http://localhost:8080/reservas'; // Cambiar por la URL del backend
+  private urlBase: string = 'http://localhost:8080/reservas'; // Cambiar por la URL del backend
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-    // Obtener todas las reservas
-    getReservas(): Observable<any[]> {
-        return this.http.get<any[]>(this.urlBase);
-    }
+  // Obtener todas las reservas
+  getReservas(): Observable<any[]> {
+    return this.http.get<any[]>(this.urlBase);
+  }
 
-    // Agregar una nueva reserva
-    agregarReserva(reserva: any): Observable<any> {
-        return this.http.post<any>(this.urlBase, reserva);
-    }
+  // Agregar una nueva reserva
+  registrarReserva(reserva: any): Observable<any> {
+    return this.http.post<any>(this.urlBase, reserva);
+  }
 
-    // Modificar una reserva existente
-    modificarReserva(reserva: any): Observable<any> {
-        return this.http.put<any>(this.urlBase, reserva);
-    }
+  // Modificar una reserva existente
+  modificarReserva(reserva: any): Observable<any> {
+    return this.http.put<any>(this.urlBase, reserva);
+  }
 
-    // Eliminar una reserva por ID
-    eliminarReserva(id: number): Observable<any> {
-        return this.http.delete<any>(`${this.urlBase}/${id}`);
-    }
+  // Eliminar una reserva por ID
+  eliminarReserva(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.urlBase}/${id}`);
+  }
 
-    // Obtener reservas por nombre de reservante
-    getReservaByReservante(nombreReservante: string): Observable<any[]> {
-        return this.http.get<any[]>(`${this.urlBase}/buscarPorReservante?nombreReservante=${nombreReservante}`);
-    }
+  // Obtener reservas por nombre de reservante
+  getReservaByReservante(nombreReservante: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlBase}/buscarPorReservante?nombreReservante=${nombreReservante}`);
+  }
 
-    // Obtener reservas por espacio
-    getReservaByEspacio(nombreEspacio: string): Observable<any[]> {
-        return this.http.get<any[]>(`${this.urlBase}/buscarPorEspacio?nombreEspacio=${nombreEspacio}`);
-    }
+  // Obtener reservas por espacio
+  getReservaByEspacio(nombreEspacio: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlBase}/buscarPorEspacio?nombreEspacio=${nombreEspacio}`);
+  }
 }

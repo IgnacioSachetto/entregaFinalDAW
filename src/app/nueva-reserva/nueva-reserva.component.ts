@@ -1,45 +1,74 @@
-import { Component } from '@angular/core';
-
-import { OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { EspaciosService } from '../service/espacios.service';
+import { ReservasService } from '../service/reservas.service';
+import { ReservantesService } from '../service/reservantes.service';
 
 @Component({
   selector: 'app-nueva-reserva',
   templateUrl: './nueva-reserva.component.html',
   styleUrls: ['./nueva-reserva.component.css']
 })
-export class NuevaReservaComponent /*implements OnInit*/ {
+export class NuevaReservaComponent implements OnInit {
+  espacios: any[] = [];
+  reservantes: any[] = [];
 
-
- /*  espacios: string[] = [];
-  reservantes: string[] = [];
-
-  constructor(private http: HttpClient) { }
+  constructor(
+    private espaciosService: EspaciosService,
+    private reservantesService: ReservantesService,
+    private reservasService: ReservasService
+  ) { }
 
   ngOnInit(): void {
-    this.obtenerEspacios();
-    this.obtenerReservantes();
+    this.cargarEspacios();
+    this.cargarReservantes();
   }
 
-  obtenerEspacios() {
-    this.http.get<string[]>('localhost/espacios/ (GET ALL) ').subscribe(
+  cargarEspacios() {
+    this.espaciosService.getEspacios().subscribe(
       (data) => {
         this.espacios = data;
       },
       (error) => {
-        console.error('Error al obtener la lista de espacios:', error);
+        console.error('Error al cargar los espacios:', error);
       }
     );
   }
 
-  obtenerReservantes() {
-    this.http.get<string[]>('localhost/reservantes/ (GET ALL)').subscribe(
+  cargarReservantes() {
+    this.reservantesService.getReservantes().subscribe(
       (data) => {
         this.reservantes = data;
       },
       (error) => {
-        console.error('Error al obtener la lista de reservantes:', error);
+        console.error('Error al cargar los reservantes:', error);
       }
     );
-  }*/
+  }
+
+  registrarReserva() {
+    const fechaInicio = (document.getElementById('FechaInicio') as HTMLInputElement).value;
+    const fechaFin = (document.getElementById('FechaFin') as HTMLInputElement).value;
+    const motivo = (document.getElementById('motivo') as HTMLInputElement).value;
+    const capacidadRequerida = parseInt((document.getElementById('capRequerida') as HTMLInputElement).value, 10);
+    const espacioSeleccionado = (document.getElementById('Espacio') as HTMLSelectElement).value;
+    const reservanteSeleccionado = (document.getElementById('Reservante') as HTMLSelectElement).value;
+
+    const nuevaReserva = {
+      fechaInicio: fechaInicio,
+      fechaFin: fechaFin,
+      motivo: motivo,
+      capacidadRequerida: capacidadRequerida,
+      espacio: espacioSeleccionado,
+      reservante: reservanteSeleccionado
+    };
+
+    this.reservasService.registrarReserva(nuevaReserva).subscribe(
+      (data) => {
+        console.log('Reserva registrada correctamente:', data);
+      },
+      (error) => {
+        console.error('Error al registrar la reserva:', error);
+      }
+    );
+  }
 }

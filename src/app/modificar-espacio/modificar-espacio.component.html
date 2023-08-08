@@ -1,20 +1,18 @@
-<p>nuevo-reservante works!</p>
+<p>modificar-espacio works!</p>
 
 <h2>Modificar Espacio</h2>
 <form class="form-inline">
   <div class="form-item form-group">
     <label for="filtroAla">Filtrar por Ala:</label>
-    <input type="text" id="filtroEspacio" name="filtroAla" class="form-control">
+    <input type="text" id="filtroEspacio" name="filtroAla" class="form-control" [(ngModel)]="filtroAla">
   </div>
-  <br>
-  <button type="submit" class="btn btn-primary">Buscar</button>
+  <button type="button" class="btn btn-primary" (click)="buscarPorAla()">Buscar</button>
 
   <div class="form-item form-group">
     <label for="filtroCapacidad">Filtrar por Capacidad:</label>
-    <input type="text" id="filtroCapacidad" name="filtroCapacidad" class="form-control">
+    <input type="number" id="filtroCapacidad" name="filtroCapacidad" class="form-control" [(ngModel)]="filtroCapacidad">
   </div>
-  <br>
-  <button type="submit" class="btn btn-primary">Buscar</button>
+  <button type="button" class="btn btn-primary" (click)="buscarPorCapacidad()">Buscar</button>
 </form>
 <table class="table">
   <thead>
@@ -27,15 +25,23 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>
-        <button type="button" class="btn btn-primary">Modificar</button>
-        <button type="button" class="btn btn-danger">Eliminar</button>
-      </td>
-    </tr>
+    <ng-container *ngIf="espacios.length > 0; else noEspacios">
+      <tr *ngFor="let espacio of espacios">
+        <td>{{ espacio.nombre }}</td>
+        <td>{{ espacio.ala }}</td>
+        <td>{{ espacio.capacidad }}</td>
+        <td>{{ espacio.recursos }}</td>
+        <td>
+          <button type="button" class="btn btn-primary" (click)="modificarEspacio(espacio.id)">Modificar</button>
+          <button type="button" class="btn btn-danger" (click)="eliminarEspacio(espacio.id)">Eliminar</button>
+        </td>
+      </tr>
+    </ng-container>
   </tbody>
 </table>
+
+<ng-template #noEspacios>
+  <tr>
+    <td colspan="5">No hay espacios disponibles.</td>
+  </tr>
+</ng-template>
