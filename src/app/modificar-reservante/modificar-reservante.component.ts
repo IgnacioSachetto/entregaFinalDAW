@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UsuariosService } from '../service/usuarios.service';
+import { ReservantesService } from '../service/reservantes.service';
 
 @Component({
   selector: 'app-modificar-reservante',
@@ -7,65 +7,78 @@ import { UsuariosService } from '../service/usuarios.service';
   styleUrls: ['./modificar-reservante.component.css']
 })
 export class ModificarReservanteComponent implements OnInit {
-  usuarios: any[] = []; // Aquí almacenaremos los usuarios que obtengamos del backend
-  modoEditar: boolean = false; // Variable para controlar si estamos en modo edición o no
-  usuarioEditando: any = {}; // Aquí almacenaremos el usuario que estamos editando
+  reservantes: any[] = [];
+  modoEditar: boolean = false;
+  indiceEditando: number = -1; // Agregamos la variable para el índice del reservante que estamos editando
+  reservanteEditando: any = {};
 
-  constructor(private usuariosService: UsuariosService) { }
+  constructor(private reservantesService: ReservantesService) { }
 
   ngOnInit(): void {
-    this.obtenerUsuarios();
+    this.obtenerReservantes();
   }
 
-  obtenerUsuarios() {
-    this.usuariosService.getUsuarios().subscribe(
+  obtenerReservantes() {
+    this.reservantesService.getReservantes().subscribe(
       (data) => {
-        this.usuarios = data;
+        this.reservantes = data;
       },
       (error) => {
-        console.error('Error al obtener la lista de usuarios:', error);
+        console.error('Error al obtener la lista de reservantes:', error);
       }
     );
   }
 
   buscarPorLegajo() {
-    const legajo = (document.getElementById('filtroLegajo') as HTMLInputElement).value;
-    const legajoNumero = parseInt(legajo, 10); // Convertir legajo a número
-    this.usuariosService.getUsuarioPorLegajo(legajoNumero).subscribe(
-      (data) => {
-        this.usuarios = [data];
-      },
-      (error) => {
-        console.error('Error al obtener el usuario por legajo:', error);
-      }
-    );
-  }
+    const legajoInput = (document.getElementById('filtroLegajo') as HTMLInputElement);
+    const legajo = legajoInput.value;
 
-buscarPorDNI() {
-  const dni = (document.getElementById('filtroDNI') as HTMLInputElement).value;
-  this.usuariosService.getUsuarioPorDNI(parseInt(dni, 10)).subscribe(
-    (data) => {
-      this.usuarios = [data];
-    },
-    (error) => {
-      console.error('Error al obtener el usuario por DNI:', error);
+    if (legajo.trim() !== '') {
+      this.reservantesService.buscarReservantePorLegajo(legajo).subscribe(
+        (data) => {
+          this.reservantes = data; // Actualiza la lista de reservantes con los datos encontrados
+           legajoInput.value = '';
+        },
+        (error) => {
+          console.error('Error al obtener el usuario por legajo:', error);
+        }
+      );
     }
-  );
-}
-
-
-  editarUsuario(usuario: any) {
-    this.modoEditar = true;
-    // Hacemos una copia del usuario para no modificar el original hasta guardar los cambios
-    this.usuarioEditando = { ...usuario };
   }
 
-  guardarUsuario(usuario: any) {
-    this.usuariosService.actualizarUsuario(usuario).subscribe(
+
+  buscarPorDNI() {
+    const dniInput = (document.getElementById('filtroDNI') as HTMLInputElement);
+    const dni = dniInput.value;
+
+    if (dni.trim() !== '') {
+      this.reservantesService.buscarReservantePorDni(dni).subscribe(
+        (data) => {
+          this.reservantes = data;
+          dniInput.value = '';
+
+        },
+        (error) => {
+          console.error('Error al obtener el usuario por DNI:', error);
+        }
+      );
+    }
+  }
+
+  editarUsuario(i: number) {
+    this.modoEditar = true;
+    this.indiceEditando = i; // Establecemos el índice del reservante que estamos editando
+    this.reservanteEditando = { ...this.reservantes[i] }; // Usamos los datos del reservante actual
+  }
+
+  guardarUsuario() {
+    this.reservantesService.modificarReservante(this.reservanteEditando).subscribe(
       (data) => {
         console.log('Usuario actualizado correctamente:', data);
         this.modoEditar = false;
-        this.usuarioEditando = {}; // Reiniciamos el usuarioEditando
+        this.indiceEditando = -1; // Reseteamos el índice
+        this.reservanteEditando = {};
+        this.obtenerReservantes(); // Recargamos los datos
       },
       (error) => {
         console.error('Error al actualizar el usuario:', error);
@@ -73,12 +86,23 @@ buscarPorDNI() {
     );
   }
 
-  eliminarUsuario(usuario: any) {
-    this.usuariosService.eliminarUsuario(usuario.id).subscribe(
+
+  eliminarUsuario(reservante: any) {
+    this.reservantesService.eliminarUsuario(reservante.id).subscribe(
       (data) => {
         console.log('Usuario eliminado correctamente:', data);
-        // Volvemos a obtener la lista de usuarios para refrescar la tabla
-        this.obtenerUsuarios();
+
+        // Remover el reservante eliminado de la lista local
+        const index = this.reservantes.findIndex(r => r.id === reservante.id);
+        if (index !== -1) {
+          this.reservantes.splice(index, 1);
+        }
+
+        // Restablecer los valores y recargar los datos
+        this.modoEditar = false;
+        this.indiceEditando = -1;
+        this.reservanteEditando = {};
+        this.obtenerReservantes();
       },
       (error) => {
         console.error('Error al eliminar el usuario:', error);
@@ -86,8 +110,10 @@ buscarPorDNI() {
     );
   }
 
+
   cancelarEdicion() {
     this.modoEditar = false;
-    this.usuarioEditando = {}; // Reiniciamos el usuarioEditando
+    this.indiceEditando = -1; // Reseteamos el índice
+    this.reservanteEditando = {};
   }
 }

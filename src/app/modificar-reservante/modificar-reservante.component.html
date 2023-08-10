@@ -26,18 +26,53 @@
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngIf="usuarios.length > 0; else noReservantes">
-      <tr *ngFor="let usuario of usuarios">
-        <td>{{ usuario.nombre }}</td>
-        <td>{{ usuario.apellido }}</td>
-        <td>{{ usuario.legajo }}</td>
-        <td>{{ usuario.dni }}</td>
-        <td>{{ usuario.email }}</td>
+    <ng-container *ngIf="reservantes.length > 0; else noReservantes">
+      <tr *ngFor="let reservante of reservantes; let i = index">
         <td>
-          <button *ngIf="!modoEditar" type="button" class="btn btn-primary" (click)="editarUsuario(usuario)">Modificar</button>
-          <button *ngIf="!modoEditar" type="button" class="btn btn-danger" (click)="eliminarUsuario(usuario)">Eliminar</button>
-          <button *ngIf="modoEditar" type="button" class="btn btn-success" (click)="guardarUsuario(usuario)">Guardar</button>
-          <button *ngIf="modoEditar" type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+          <ng-container *ngIf="modoEditar && i === indiceEditando">
+            <input type="text" [(ngModel)]="reservanteEditando.nombre" />
+          </ng-container>
+          <ng-container *ngIf="!modoEditar || i !== indiceEditando">
+            {{ reservante.nombre }}
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="modoEditar && i === indiceEditando">
+            <input type="text" [(ngModel)]="reservanteEditando.apellido" />
+          </ng-container>
+          <ng-container *ngIf="!modoEditar || i !== indiceEditando">
+            {{ reservante.apellido }}
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="modoEditar && i === indiceEditando">
+            <input type="text" [(ngModel)]="reservanteEditando.legajo" />
+          </ng-container>
+          <ng-container *ngIf="!modoEditar || i !== indiceEditando">
+            {{ reservante.legajo }}
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="modoEditar && i === indiceEditando">
+            <input type="text" [(ngModel)]="reservanteEditando.dni" />
+          </ng-container>
+          <ng-container *ngIf="!modoEditar || i !== indiceEditando">
+            {{ reservante.dni }}
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="modoEditar && i === indiceEditando">
+            <input type="text" [(ngModel)]="reservanteEditando.email" />
+          </ng-container>
+          <ng-container *ngIf="!modoEditar || i !== indiceEditando">
+            {{ reservante.email }}
+          </ng-container>
+        </td>
+        <td>
+          <button *ngIf="!modoEditar" type="button" class="btn btn-primary" (click)="editarUsuario(i)">Modificar</button>
+          <button *ngIf="modoEditar && i === indiceEditando" type="button" class="btn btn-success" (click)="guardarUsuario()">Guardar</button>
+          <button *ngIf="modoEditar && i === indiceEditando" type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="eliminarUsuario(reservante)">Eliminar</button>
         </td>
       </tr>
     </ng-container>

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export class EspaciosService {
-  private urlBase: string = 'http://localhost:8080/espacios'; // Cambiar por la URL del backend
+  private urlBase: string = 'http://localhost:5433/EspacioFisico';
 
   constructor(private http: HttpClient) { }
 
@@ -21,7 +21,7 @@ export class EspaciosService {
   }
 
   // Modificar un espacio existente
-  modificarEspacio(espacio: any): Observable<any> {
+  actualizarEspacio(espacio: any): Observable<any> {
     return this.http.put<any>(this.urlBase, espacio);
   }
 
@@ -42,11 +42,11 @@ export class EspaciosService {
 
   // Obtener las opciones de ala desde el backend
   obtenerAlas(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.urlBase}/opcionesAla`);
+    return this.http.get<string[]>(`${this.urlBase}/alas`);
   }
 
   // Obtener las opciones de recurso desde el backend
   obtenerRecursos(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.urlBase}/opcionesRecurso`);
+    return this.http.get<string[]>(`${this.urlBase}/recursos`);
   }
 }

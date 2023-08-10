@@ -38,8 +38,10 @@
         <td>{{ reserva.reservante }}</td>
         <td>{{ reserva.estado }}</td>
         <td>
-          <button type="button" class="btn btn-primary" (click)="modificarReserva(reserva.id)">Modificar</button>
-          <button type="button" class="btn btn-danger" (click)="eliminarReserva(reserva.id)">Eliminar</button>
+          <button *ngIf="!reserva.modoEditar" type="button" class="btn btn-primary" (click)="editarReserva(reserva)">Modificar</button>
+          <button *ngIf="!reserva.modoEditar" type="button" class="btn btn-danger" (click)="eliminarReserva(reserva.id)">Eliminar</button>
+          <button *ngIf="reserva.modoEditar" type="button" class="btn btn-success" (click)="guardarReserva(reserva)">Guardar</button>
+          <button *ngIf="reserva.modoEditar" type="button" class="btn btn-secondary" (click)="cancelarEdicion(reserva)">Cancelar</button>
         </td>
       </tr>
     </ng-container>

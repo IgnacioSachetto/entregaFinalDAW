@@ -28,29 +28,39 @@ export class ModificarReservaComponent implements OnInit {
     );
   }
 
-  modificarReserva(id: number) {
-    const reserva = this.reservas.find(r => r.id === id);
-    if (reserva) {
-      // Implementa la lógica para modificar la reserva por su ID
-      // Por ejemplo, podrías abrir un modal con los detalles de la reserva y permitir al usuario editarlos
-      console.log('Modificando reserva:', reserva);
-    }
+  editarReserva(reserva: any) {
+    reserva.modoEditar = true;
+    reserva.reservaEditando = { ...reserva };
   }
 
-  eliminarReserva(id: number) {
-    const reservaIndex = this.reservas.findIndex(r => r.id === id);
-    if (reservaIndex !== -1) {
-      // Implementa la lógica para eliminar la reserva por su ID
-      this.reservasService.eliminarReserva(id).subscribe(
-        () => {
-          console.log('Reserva eliminada correctamente');
-          // Elimina la reserva de la lista de reservas local
-          this.reservas.splice(reservaIndex, 1);
-        },
-        (error) => {
-          console.error('Error al eliminar la reserva:', error);
-        }
-      );
-    }
+  guardarReserva(reserva: any) {
+    this.reservasService.actualizarReserva(reserva).subscribe(
+      (data) => {
+        console.log('Reserva actualizada correctamente:', data);
+        reserva.modoEditar = false;
+        reserva.reservaEditando = {}; // Reiniciamos la reservaEditando
+      },
+      (error) => {
+        console.error('Error al actualizar la reserva:', error);
+      }
+    );
+  }
+
+  eliminarReserva(reserva: any) {
+    this.reservasService.eliminarReserva(reserva.id).subscribe(
+      (data) => {
+        console.log('Reserva eliminada correctamente:', data);
+        // Volvemos a obtener la lista de reservas para refrescar la tabla
+        this.buscarReservas();
+      },
+      (error) => {
+        console.error('Error al eliminar la reserva:', error);
+      }
+    );
+  }
+
+  cancelarEdicion(reserva: any) {
+    reserva.modoEditar = false;
+    reserva.reservaEditando = {}; // Reiniciamos la reservaEditando
   }
 }

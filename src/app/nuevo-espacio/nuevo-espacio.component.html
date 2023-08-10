@@ -17,7 +17,7 @@
     <label for="ala">Selección de Ala:</label>
     <select id="ala" required [(ngModel)]="ala" name="ala">
       <option value="" disabled selected>Seleccione un ala</option>
-      <option *ngFor="let alaOption of alas" [value]="alaOption">{{ alaOption }}</option>
+      <option *ngFor="let ala of alas" [value]="ala">{{ alas }}</option>
     </select>
   </div>
 
@@ -26,7 +26,7 @@
     <label for="recurso">Recursos del Espacio</label>
     <select id="recurso" required [(ngModel)]="recurso" name="recurso">
       <option value="" disabled selected>Seleccione un recurso</option>
-      <option *ngFor="let recursoOption of recursos" [value]="recursoOption">{{ recursoOption }}</option>
+      <option *ngFor="let recurso of recursos" [value]="recurso">{{ recursos }}</option>
     </select>
   </div>
 

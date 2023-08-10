@@ -14,15 +14,21 @@ export class NuevoReservanteComponent implements OnInit {
   }
 
   guardarReservante() {
-    const nombre = (document.getElementById('nombre') as HTMLInputElement).value;
-    const apellido = (document.getElementById('apellido') as HTMLInputElement).value;
-    const legajo = (document.getElementById('legajo') as HTMLInputElement).value;
-    const dni = (document.getElementById('dni') as HTMLInputElement).value;
-    const email = (document.getElementById('email') as HTMLInputElement).value;
-    const telefono = (document.getElementById('telefono') as HTMLInputElement).value;
+    const nombreInput = (document.getElementById('nombre') as HTMLInputElement);
+    const apellidoInput = (document.getElementById('apellido') as HTMLInputElement);
+    const legajoInput = (document.getElementById('legajo') as HTMLInputElement);
+    const dniInput = (document.getElementById('dni') as HTMLInputElement);
+    const emailInput = (document.getElementById('email') as HTMLInputElement);
+    const telefonoInput = (document.getElementById('telefono') as HTMLInputElement);
 
-    // Crea el objeto de usuario con los datos ingresados en el formulario
-    const nuevoUsuario = {
+    const nombre = nombreInput.value;
+    const apellido = apellidoInput.value;
+    const legajo = legajoInput.value;
+    const dni = dniInput.value;
+    const email = emailInput.value;
+    const telefono = telefonoInput.value;
+
+    const reservante = {
       nombre: nombre,
       apellido: apellido,
       legajo: legajo,
@@ -32,13 +38,21 @@ export class NuevoReservanteComponent implements OnInit {
     };
 
     // Llama al método agregarUsuario() del servicio para guardar el nuevo usuario
-    this.usuariosService.agregarUsuario(nuevoUsuario).subscribe(
+    this.usuariosService.agregarUsuario(reservante).subscribe(
       (data) => {
         console.log('Usuario guardado correctamente:', data);
+        // Restablece los valores de los campos a cadenas vacías después de guardar
+        nombreInput.value = '';
+        apellidoInput.value = '';
+        legajoInput.value = '';
+        dniInput.value = '';
+        emailInput.value = '';
+        telefonoInput.value = '';
       },
       (error) => {
         console.error('Error al guardar el usuario:', error);
       }
     );
   }
+
 }

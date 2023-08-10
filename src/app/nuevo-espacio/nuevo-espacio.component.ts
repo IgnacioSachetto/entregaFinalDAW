@@ -41,10 +41,9 @@ export class NuevoEspacioComponent {
   }
 
   cargarAlas() {
-    // Llamar a tu servicio para cargar las opciones de ala desde el backend
     this.espaciosService.obtenerAlas().subscribe(
       (data) => {
-        this.alas = data; // Asignar la respuesta del backend a la lista de alas
+        this.alas = data;
       },
       (error) => {
         console.error('Error al cargar las opciones de ala:', error);
@@ -56,7 +55,7 @@ export class NuevoEspacioComponent {
     // Llamar a tu servicio para cargar las opciones de recurso desde el backend
     this.espaciosService.obtenerRecursos().subscribe(
       (data) => {
-        this.recursos = data; // Asignar la respuesta del backend a la lista de recursos
+        this.recursos = data;
       },
       (error) => {
         console.error('Error al cargar las opciones de recurso:', error);
