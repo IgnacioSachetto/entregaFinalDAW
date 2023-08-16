@@ -7,49 +7,80 @@ import { EspaciosService } from '../service/espacios.service';
   styleUrls: ['./modificar-espacio.component.css']
 })
 export class ModificarEspacioComponent implements OnInit {
-  espacios: any[] = []; // Change the data type if different
+  espacios: any[] = [];
   filtroAla: string = '';
-  filtroCapacidad: number | string = ''; // Change to type "number | string"
+  filtroCapacidad: number | string = '';
+  indiceEditandoEspacio: number = -1;
+  modoEditar: boolean = false;
+  espacioEditando: any = {};
 
   constructor(private espaciosService: EspaciosService) { }
 
   ngOnInit(): void {
-    this.buscarPorAla();
+    this.obtenerEspacios();
+  }
+
+  obtenerEspacios() {
+    this.espaciosService.getEspacios().subscribe(
+      (data) => {
+        this.espacios = data;
+      },
+      (error) => {
+        console.error('Error al obtener la lista de espacios:', error);
+      }
+    );
   }
 
   buscarPorAla() {
-    this.espaciosService.getEspaciosByAla(this.filtroAla).subscribe(
-      (data) => {
-        this.espacios = data; // Make sure the service returns data correctly
-      },
-      (error) => {
-        console.error('Error al cargar los espacios:', error);
-      }
-    );
+    const alaInput = (document.getElementById('filtroAla') as HTMLInputElement);
+    const nombreAla = alaInput.value;
+
+    if (nombreAla.trim() !== '') {
+      this.espaciosService.getEspaciosByAla(nombreAla).subscribe(
+        (data) => {
+          this.espacios = data; // Actualiza la lista de espacios con los datos encontrados
+          alaInput.value = '';
+        },
+        (error) => {
+          console.error('Error al cargar los espacios por ala:', error);
+        }
+      );
+    }
   }
+
 
   buscarPorCapacidad() {
-    this.espaciosService.getEspaciosByCapacidad(Number(this.filtroCapacidad)).subscribe(
-      (data) => {
-        this.espacios = data; // Make sure the service returns data correctly
-      },
-      (error) => {
-        console.error('Error al cargar los espacios:', error);
-      }
-    );
+    const capacidadInput = (document.getElementById('filtroCapacidad') as HTMLInputElement);
+    const capacidad = capacidadInput.value;
+
+    if (capacidad.trim() !== '') {
+      this.espaciosService.getEspaciosByCapacidad(Number(capacidad)).subscribe(
+        (data) => {
+          this.espacios = data;
+          capacidadInput.value = '';
+        },
+        (error) => {
+          console.error('Error al cargar los espacios por capacidad:', error);
+        }
+      );
+    }
   }
 
-  editarEspacio(espacio: any) {
-    espacio.modoEditar = true;
-    espacio.espacioEditando = { ...espacio };
+
+  editarEspacio(i: number) {
+    this.modoEditar = true;
+    this.indiceEditandoEspacio = i;
+    this.espacioEditando = { ...this.espacios[i] };
   }
 
-  guardarEspacio(espacio: any) {
-    this.espaciosService.actualizarEspacio(espacio).subscribe(
+  guardarEspacio() {
+    this.espaciosService.modificarEspacio(this.espacioEditando).subscribe(
       (data) => {
         console.log('Espacio actualizado correctamente:', data);
-        espacio.modoEditar = false;
-        espacio.espacioEditando = {}; // Reiniciamos el espacioEditando
+        this.modoEditar = false;
+        this.indiceEditandoEspacio = -1;
+        this.espacioEditando = {};
+        this.obtenerEspacios();
       },
       (error) => {
         console.error('Error al actualizar el espacio:', error);
@@ -57,12 +88,17 @@ export class ModificarEspacioComponent implements OnInit {
     );
   }
 
-  eliminarEspacio(id: number) {
-    this.espaciosService.eliminarEspacio(id).subscribe(
+  eliminarEspacio(espacio: any) {
+    this.espaciosService.eliminarEspacio(espacio.id).subscribe(
       (data) => {
         console.log('Espacio eliminado correctamente:', data);
-        // Volvemos a obtener la lista de espacios para refrescar la tabla
-        this.buscarPorAla();
+        const index = this.espacios.findIndex(e => e.id === espacio.id);
+        if (index !== -1) {
+          this.espacios.splice(index, 1);
+        }
+        this.modoEditar = false;
+        this.espacioEditando = {};
+        this.indiceEditandoEspacio = -1;
       },
       (error) => {
         console.error('Error al eliminar el espacio:', error);
@@ -70,8 +106,9 @@ export class ModificarEspacioComponent implements OnInit {
     );
   }
 
-  cancelarEdicionEspacio(espacio: any) {
-    espacio.modoEditar = false;
-    espacio.espacioEditando = {}; // Reiniciamos el espacioEditando
+  cancelarEdicionEspacio() {
+    this.modoEditar = false;
+    this.espacioEditando = {};
+    this.indiceEditandoEspacio = -1;
   }
 }

@@ -1,5 +1,3 @@
-<p>modificar-espacio works!</p>
-
 <h2>Modificar Espacio</h2>
 <form class="form-inline">
   <div class="form-item form-group">
@@ -19,6 +17,7 @@
     <tr>
       <th>Nombre de Espacio</th>
       <th>Ala</th>
+      <th>Nombre de Ala</th>
       <th>Capacidad</th>
       <th>Recursos</th>
       <th>Acciones</th>
@@ -26,22 +25,52 @@
   </thead>
   <tbody>
     <ng-container *ngIf="espacios.length > 0; else noEspacios">
-      <tr *ngFor="let espacio of espacios">
-        <td>{{ espacio.nombre }}</td>
-        <td>{{ espacio.ala }}</td>
-        <td>{{ espacio.capacidad }}</td>
-        <td>{{ espacio.recursos }}</td>
+      <tr *ngFor="let espacio of espacios; let i = index">
         <td>
-          <button *ngIf="!espacio.modoEditar" type="button" class="btn btn-primary" (click)="editarEspacio(espacio)">Modificar</button>
-          <button *ngIf="!espacio.modoEditar" type="button" class="btn btn-danger" (click)="eliminarEspacio(espacio.id)">Eliminar</button>
-          <button *ngIf="espacio.modoEditar" type="button" class="btn btn-success" (click)="guardarEspacio(espacio)">Guardar</button>
-          <button *ngIf="espacio.modoEditar" type="button" class="btn btn-secondary" (click)="cancelarEdicionEspacio(espacio)">Cancelar</button>
+          <ng-container *ngIf="!modoEditar || i !== indiceEditandoEspacio">
+            {{ espacio.nombre }}
+          </ng-container>
+          <ng-container *ngIf="modoEditar && i === indiceEditandoEspacio">
+            <input type="text" [(ngModel)]="espacioEditando.nombre">
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="!modoEditar || i !== indiceEditandoEspacio">
+            {{ espacio.ala.id }}
+          </ng-container>
+          <ng-container *ngIf="modoEditar && i === indiceEditandoEspacio">
+            <input type="text" [(ngModel)]="espacioEditando.ala.id">
+          </ng-container>
+        </td>
+        <td>
+          {{ espacio.ala.nombre }}
+        </td>
+        <td>
+          <ng-container *ngIf="!modoEditar || i !== indiceEditandoEspacio">
+            {{ espacio.capacidad }}
+          </ng-container>
+          <ng-container *ngIf="modoEditar && i === indiceEditandoEspacio">
+            <input type="number" [(ngModel)]="espacioEditando.capacidad">
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="!modoEditar || i !== indiceEditandoEspacio">
+            {{ espacio.recursos }}
+          </ng-container>
+          <ng-container *ngIf="modoEditar && i === indiceEditandoEspacio">
+            <input type="text" [(ngModel)]="espacioEditando.recursos">
+          </ng-container>
+        </td>
+        <td>
+          <button *ngIf="!modoEditar" type="button" class="btn btn-primary" (click)="editarEspacio(i)">Modificar</button>
+          <button *ngIf="modoEditar && i === indiceEditandoEspacio" type="button" class="btn btn-success" (click)="guardarEspacio()">Guardar</button>
+          <button *ngIf="modoEditar && i === indiceEditandoEspacio" type="button" class="btn btn-secondary" (click)="cancelarEdicionEspacio()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="eliminarEspacio(espacio)">Eliminar</button>
         </td>
       </tr>
     </ng-container>
   </tbody>
 </table>
-
 <ng-template #noEspacios>
   <tr>
     <td colspan="5">No hay espacios disponibles.</td>

@@ -6,38 +6,44 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export class EspaciosService {
-  private urlBase: string = 'http://localhost:5433/EspacioFisico';
+  private urlBase: string = 'http://localhost:8080/EspacioFisico';
 
   constructor(private http: HttpClient) { }
 
   // Obtener todos los espacios
   getEspacios(): Observable<any[]> {
-    return this.http.get<any[]>(this.urlBase);
+    return this.http.get<any[]>(this.urlBase+"/searchAll");
   }
 
   // Agregar un nuevo espacio
   agregarEspacio(espacio: any): Observable<any> {
-    return this.http.post<any>(this.urlBase, espacio);
+    return this.http.post<any>(`${this.urlBase}/guardar`, espacio);
   }
 
   // Modificar un espacio existente
-  actualizarEspacio(espacio: any): Observable<any> {
-    return this.http.put<any>(this.urlBase, espacio);
+  modificarEspacio(espacio: any): Observable<any> {
+    console.log(espacio.ala.id);
+    return this.http.put<any>(this.urlBase+"/actualizar", espacio);
   }
 
   // Eliminar un espacio por ID
   eliminarEspacio(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.urlBase}/${id}`);
+    const url = `${this.urlBase}/delete?id=${id}`;
+    console.log('URL para eliminar:', url); // Agrega esta línea
+    return this.http.delete<any>(url);
   }
 
   // Obtener espacios por ala
   getEspaciosByAla(nombreAla: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.urlBase}/buscarPorAla?nombreAla=${nombreAla}`);
+    console.log(`${this.urlBase}/search?ala=${nombreAla}`)
+    return this.http.get<any>(`${this.urlBase}/search?nombre=${nombreAla}`);
   }
 
   // Obtener espacios por capacidad
-  getEspaciosByCapacidad(capacidad: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.urlBase}/buscarPorCapacidad?capacidad=${capacidad}`);
+  getEspaciosByCapacidad(capacidad: number): Observable<any> {
+    const url = `${this.urlBase}/search?capacidad=${capacidad}`;
+    console.log('URL para eliminar:', url); // Agrega esta línea
+    return this.http.get<any>(`${this.urlBase}/search?capacidad=${capacidad}`);
   }
 
   // Obtener las opciones de ala desde el backend

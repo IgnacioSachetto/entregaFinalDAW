@@ -9,26 +9,25 @@
 
   <div class="form-item">
     <label for="capacidadMaxima">Capacidad Máxima:</label>
-    <input type="number" id="capacidadMaxima" required [(ngModel)]="capacidadMaxima" name="capacidadMaxima">
+    <input type="number" id="capacidadMaxima" required [(ngModel)]="capacidad" name="capacidadMaxima">
   </div>
 
   <!-- Selección de Ala -->
   <div class="form-item">
     <label for="ala">Selección de Ala:</label>
-    <select id="ala" required [(ngModel)]="ala" name="ala">
+    <select id="ala" required [(ngModel)]="alaSeleccionada" name="ala">
       <option value="" disabled selected>Seleccione un ala</option>
-      <option *ngFor="let ala of alas" [value]="ala">{{ alas }}</option>
+      <option *ngFor="let opcionAla of alas" [value]="opcionAla.id">{{ opcionAla.nombre }}</option>
     </select>
   </div>
 
+
   <!-- Selección de Recurso -->
   <div class="form-item">
-    <label for="recurso">Recursos del Espacio</label>
-    <select id="recurso" required [(ngModel)]="recurso" name="recurso">
-      <option value="" disabled selected>Seleccione un recurso</option>
-      <option *ngFor="let recurso of recursos" [value]="recurso">{{ recursos }}</option>
-    </select>
+    <label for="recursos">Recursos del Espacio</label>
+    <input type="text" id="recursos" [(ngModel)]="recursos" name="recursos" />
   </div>
+
 
   <button type="button" (click)="guardarEspacio()">Guardar</button>
 </form>

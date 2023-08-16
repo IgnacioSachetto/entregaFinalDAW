@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AlasService } from '../service/alas.service';
 import { EspaciosService } from '../service/espacios.service'; // Asumiendo que tienes un servicio llamado EspaciosService
 
 @Component({
@@ -9,29 +10,36 @@ import { EspaciosService } from '../service/espacios.service'; // Asumiendo que 
 export class NuevoEspacioComponent {
 
   nombre: string;
-  capacidadMaxima: number;
+  capacidad: number;
   ala: string;
   recurso: string;
-  alas: string[]; // Lista de opciones de ala desde el backend
+  alas: any[]; // Lista de opciones de ala desde el backend
   recursos: string[]; // Lista de opciones de recurso desde el backend
+  alaSeleccionada: number; // Puedes cambiar el tipo según el tipo de ID en tu modelo
 
-  constructor(private espaciosService: EspaciosService) { }
+
+
+  constructor(private espaciosService: EspaciosService, private alasService: AlasService) { }
 
   ngOnInit(): void {
     this.cargarAlas();
-    this.cargarRecursos();
+    /*this.cargarRecursos();*/
   }
 
   guardarEspacio() {
     const nuevoEspacio = {
       nombre: this.nombre,
-      capacidadMaxima: this.capacidadMaxima,
-      ala: this.ala,
-      recurso: this.recurso
+      capacidad: this.capacidad,
+      ala: { id: this.alaSeleccionada }, // Objeto JSON con el ID del ala
+      recursos: this.recursos
+
+
     };
 
+    console.log(nuevoEspacio);
     this.espaciosService.agregarEspacio(nuevoEspacio).subscribe(
       (data) => {
+
         console.log('Espacio guardado correctamente:', data);
       },
       (error) => {
@@ -41,7 +49,7 @@ export class NuevoEspacioComponent {
   }
 
   cargarAlas() {
-    this.espaciosService.obtenerAlas().subscribe(
+    this.alasService.obtenerAlas().subscribe(
       (data) => {
         this.alas = data;
       },
