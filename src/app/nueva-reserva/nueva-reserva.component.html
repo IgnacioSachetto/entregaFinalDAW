@@ -3,35 +3,39 @@
 <form>
   <div class="form-item">
     <label for="FechaInicio">Fecha Reserva:</label>
-    <input type="datetime-local" id="FechaInicio" required>
+    <input type="datetime-local" id="FechaInicio" required [(ngModel)]="fechaInicio" name="FechaInicio">
   </div>
 
   <div class="form-item">
     <label for="FechaFin">Fecha Fin:</label>
-    <input type="datetime-local" id="FechaFin" required>
+    <input type="datetime-local" id="FechaFin" required [(ngModel)]="fechaFin" name="FechaFin">
   </div>
 
   <div class="form-item">
     <label for="motivo">Motivo Reserva:</label>
-    <input type="textarea" id="motivo" required>
+    <input type="textarea" id="motivo" required [(ngModel)]="motivo" name="motivo">
   </div>
 
   <div class="form-item">
     <label for="capRequerida">Capacidad Requerida:</label>
-    <input type="number" id="capRequerida" required>
+    <input type="number" id="capRequerida" required [(ngModel)]="capacidadRequerida" name="capRequerida">
   </div>
 
   <div class="form-item">
-    <label for="Espacio">Espacio:</label>
-    <select id="Espacio" required>
-      <option *ngFor="let espacio of espacios" [value]="espacio">{{ espacio }}</option>
+    <label for="espacio">Selección de Espacio</label>
+    <select id="espacio" required [(ngModel)]="espacioSeleccionado" name="ala">
+      <option value="" disabled selected>Seleccione un espacio</option>
+      <option *ngFor="let opcionEspacio of espacios" [value]="opcionEspacio.id">{{ opcionEspacio.nombre }}</option>
     </select>
   </div>
 
   <div class="form-item">
     <label for="Reservante">Reservante:</label>
-    <select id="Reservante" required>
-      <option *ngFor="let reservante of reservantes" [value]="reservante">{{ reservante }}</option>
+    <select id="Reservante" required [(ngModel)]="reservanteSeleccionado" name="reservante">
+      <option value="" disabled selected>Seleccione un reservante</option>
+      <option *ngFor="let opcionReservante of reservantes" [value]="opcionReservante.id">
+        {{ opcionReservante.nombre + ' ' + opcionReservante.apellido }}
+      </option>
     </select>
   </div>
 

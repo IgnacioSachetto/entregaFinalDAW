@@ -1,7 +1,9 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import Swal from 'sweetalert2';
 import { EspaciosService } from '../service/espacios.service';
-import { ReservasService } from '../service/reservas.service';
 import { ReservantesService } from '../service/reservantes.service';
+import { ReservasService } from '../service/reservas.service';
 
 @Component({
   selector: 'app-nueva-reserva',
@@ -11,11 +13,18 @@ import { ReservantesService } from '../service/reservantes.service';
 export class NuevaReservaComponent implements OnInit {
   espacios: any[] = [];
   reservantes: any[] = [];
+  espacioSeleccionado: number; // Puedes cambiar el tipo según el tipo de ID en tu modelo
+  reservanteSeleccionado: number; // Puedes cambiar el tipo según el tipo de ID en tu modelo
+  fechaInicio: string; // Agrega las propiedades faltantes
+  fechaFin: string;
+  motivo: string;
+  capacidadRequerida: number;
 
   constructor(
     private espaciosService: EspaciosService,
     private reservantesService: ReservantesService,
-    private reservasService: ReservasService
+    private reservasService: ReservasService,
+    private datePipe: DatePipe,
   ) { }
 
   ngOnInit(): void {
@@ -38,37 +47,37 @@ export class NuevaReservaComponent implements OnInit {
     this.reservantesService.getReservantes().subscribe(
       (data) => {
         this.reservantes = data;
-      },
+        },
       (error) => {
         console.error('Error al cargar los reservantes:', error);
       }
     );
-  }
+}
 
   registrarReserva() {
-    const fechaInicio = (document.getElementById('FechaInicio') as HTMLInputElement).value;
-    const fechaFin = (document.getElementById('FechaFin') as HTMLInputElement).value;
-    const motivo = (document.getElementById('motivo') as HTMLInputElement).value;
-    const capacidadRequerida = parseInt((document.getElementById('capRequerida') as HTMLInputElement).value, 10);
-    const espacioSeleccionado = (document.getElementById('Espacio') as HTMLSelectElement).value;
-    const reservanteSeleccionado = (document.getElementById('Reservante') as HTMLSelectElement).value;
-
     const nuevaReserva = {
-      fechaInicio: fechaInicio,
-      fechaFin: fechaFin,
-      motivo: motivo,
-      capacidadRequerida: capacidadRequerida,
-      espacio: espacioSeleccionado,
-      reservante: reservanteSeleccionado
+      fechaReserva: this.datePipe.transform(this.fechaInicio, 'yyyy-MM-ddTHH:mm:ss'),
+      fechaAltaReserva: this.datePipe.transform(this.fechaInicio, 'yyyy-MM-ddTHH:mm:ss'),
+      fechaFinReserva: this.datePipe.transform(this.fechaFin, 'yyyy-MM-ddTHH:mm:ss'),
+      motivoReserva: this.motivo,
+      capacidadRequerida: this.capacidadRequerida,
+      espacioFisico: { id: this.espacioSeleccionado },
+      reservante: { id: this.reservanteSeleccionado }
     };
 
+    console.log(nuevaReserva);
     this.reservasService.registrarReserva(nuevaReserva).subscribe(
       (data) => {
         console.log('Reserva registrada correctamente:', data);
+        Swal.fire('Éxito', 'Reserva registrada correctamente', 'success');
+
       },
       (error) => {
         console.error('Error al registrar la reserva:', error);
+        Swal.fire('Error', 'Error al registrar la reserva: Ya existe una reserva en ese horario');
+
       }
     );
+
   }
 }

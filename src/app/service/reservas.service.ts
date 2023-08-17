@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export class ReservasService {
-  private urlBase: string = 'http://localhost:5433/Reserva'; // Cambiar por la URL del backend
+  private urlBase: string = 'http://localhost:8080/Reserva'; // Cambiar por la URL del backend
 
   constructor(private http: HttpClient) { }
 
@@ -17,7 +17,7 @@ export class ReservasService {
 
   // Agregar una nueva reserva
   registrarReserva(reserva: any): Observable<any> {
-    return this.http.post<any>(this.urlBase, reserva);
+    return this.http.post<any>(`${this.urlBase}/guardar`, reserva);
   }
 
   // Modificar una reserva existente
