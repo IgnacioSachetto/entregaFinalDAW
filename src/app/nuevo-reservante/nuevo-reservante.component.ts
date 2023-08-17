@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import Swal from 'sweetalert2';
 import { UsuariosService } from '../service/usuarios.service';
 
 @Component({
@@ -37,22 +38,47 @@ export class NuevoReservanteComponent implements OnInit {
       telefono: telefono
     };
 
-    // Llama al método agregarUsuario() del servicio para guardar el nuevo usuario
-    this.usuariosService.agregarUsuario(reservante).subscribe(
-      (data) => {
-        console.log('Usuario guardado correctamente:', data);
-        // Restablece los valores de los campos a cadenas vacías después de guardar
-        nombreInput.value = '';
-        apellidoInput.value = '';
-        legajoInput.value = '';
-        dniInput.value = '';
-        emailInput.value = '';
-        telefonoInput.value = '';
-      },
-      (error) => {
-        console.error('Error al guardar el usuario:', error);
-      }
-    );
-  }
+    // Mostrar un cuadro de confirmación antes de guardar
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Se guardará el nuevo usuario',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, Guardar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Llama al método agregarUsuario() del servicio para guardar el nuevo usuario
+        this.usuariosService.agregarUsuario(reservante).subscribe(
+          (data) => {
+            // Mostrar mensaje de éxito
+            Swal.fire({
+              title: 'Usuario Guardado',
+              text: 'El usuario se ha guardado correctamente',
+              icon: 'success'
+            });
 
+            console.log('Usuario guardado correctamente:', data);
+            // Restablece los valores de los campos a cadenas vacías después de guardar
+            nombreInput.value = '';
+            apellidoInput.value = '';
+            legajoInput.value = '';
+            dniInput.value = '';
+            emailInput.value = '';
+            telefonoInput.value = '';
+          },
+          (error) => {
+            // Mostrar mensaje de error
+            Swal.fire({
+              title: 'Error',
+              text: 'Ha ocurrido un error al guardar el usuario',
+              icon: 'error'
+            });
+
+            console.error('Error al guardar el usuario:', error);
+          }
+        );
+      }
+    });
+  }
 }

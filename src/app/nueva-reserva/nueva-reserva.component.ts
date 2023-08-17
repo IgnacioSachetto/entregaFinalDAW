@@ -13,9 +13,9 @@ import { ReservasService } from '../service/reservas.service';
 export class NuevaReservaComponent implements OnInit {
   espacios: any[] = [];
   reservantes: any[] = [];
-  espacioSeleccionado: number; // Puedes cambiar el tipo según el tipo de ID en tu modelo
-  reservanteSeleccionado: number; // Puedes cambiar el tipo según el tipo de ID en tu modelo
-  fechaInicio: string; // Agrega las propiedades faltantes
+  espacioSeleccionado: number;
+  reservanteSeleccionado: number;
+  fechaInicio: string;
   fechaFin: string;
   motivo: string;
   capacidadRequerida: number;
@@ -47,12 +47,12 @@ export class NuevaReservaComponent implements OnInit {
     this.reservantesService.getReservantes().subscribe(
       (data) => {
         this.reservantes = data;
-        },
+      },
       (error) => {
         console.error('Error al cargar los reservantes:', error);
       }
     );
-}
+  }
 
   registrarReserva() {
     const nuevaReserva = {
@@ -70,14 +70,22 @@ export class NuevaReservaComponent implements OnInit {
       (data) => {
         console.log('Reserva registrada correctamente:', data);
         Swal.fire('Éxito', 'Reserva registrada correctamente', 'success');
-
+        this.resetearCampos();
       },
       (error) => {
         console.error('Error al registrar la reserva:', error);
-        Swal.fire('Error', 'Error al registrar la reserva: Ya existe una reserva en ese horario');
-
+        Swal.fire('Error', 'Error al registrar la reserva: Ya existe una reserva en ese horario', 'error');
       }
     );
+  }
 
+  // Método para restablecer los campos del formulario
+  resetearCampos() {
+    this.espacioSeleccionado = null;
+    this.reservanteSeleccionado = null;
+    this.fechaInicio = '';
+    this.fechaFin = '';
+    this.motivo = '';
+    this.capacidadRequerida = null;
   }
 }

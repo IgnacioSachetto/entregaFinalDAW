@@ -12,7 +12,7 @@ export class ReservasService {
 
   // Obtener todas las reservas
   getReservas(): Observable<any[]> {
-    return this.http.get<any[]>(this.urlBase);
+    return this.http.get<any[]>(this.urlBase+"/searchAll");
   }
 
   // Agregar una nueva reserva
@@ -22,21 +22,32 @@ export class ReservasService {
 
   // Modificar una reserva existente
   actualizarReserva(reserva: any): Observable<any> {
-    return this.http.put<any>(this.urlBase, reserva);
+    return this.http.put<any>(this.urlBase+"/actualizar", reserva);
   }
 
   // Eliminar una reserva por ID
   eliminarReserva(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.urlBase}/${id}`);
+    const url = `${this.urlBase}/delete?id=${id}`;
+    return this.http.delete<any>(url);
+  }
+  getReservaByReservante(reservante: any): Observable<any[]> {
+    const queryParams = {
+      id: reservante.id,
+      nombre: reservante.nombre,
+      apellido: reservante.apellido,
+      legajo: reservante.legajo,
+      dni: reservante.dni,
+      telefono: reservante.telefono,
+      email: reservante.email
+    };
+
+    console.log(`${this.urlBase}/search?reservante=${JSON.stringify(queryParams)}`);
+    return this.http.get<any[]>(`${this.urlBase}/search?reservante=${encodeURIComponent(JSON.stringify(queryParams))}`);
   }
 
-  // Obtener reservas por nombre de reservante
-  getReservaByReservante(nombreReservante: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.urlBase}/buscarPorReservante?nombreReservante=${nombreReservante}`);
+  getReservaByEspacio(espacio: any): Observable<any[]> {
+    console.log(`${this.urlBase}/search?espacio=${JSON.stringify(espacio)}`);
+    return this.http.get<any[]>(`${this.urlBase}/search?espacio=${encodeURIComponent(JSON.stringify(espacio))}`);
   }
 
-  // Obtener reservas por espacio
-  getReservaByEspacio(nombreEspacio: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.urlBase}/buscarPorEspacio?nombreEspacio=${nombreEspacio}`);
-  }
 }

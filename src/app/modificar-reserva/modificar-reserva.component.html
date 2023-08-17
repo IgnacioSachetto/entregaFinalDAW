@@ -5,13 +5,13 @@
     <label for="filtroEspacio">Filtrar por Espacio:</label>
     <input type="text" id="filtroEspacio" name="filtroEspacio" class="form-control" [(ngModel)]="filtroEspacio">
   </div>
-  <button type="button" class="btn btn-primary" (click)="buscarReservas()">Buscar</button>
+  <button type="button" class="btn btn-primary" (click)="buscarPorEspacio()">Buscar</button>
 
   <div class="form-item form-group">
     <label for="filtroReservante">Filtrar por Reservante:</label>
     <input type="text" id="filtroReservante" name="filtroReservante" class="form-control" [(ngModel)]="filtroReservante">
   </div>
-  <button type="button" class="btn btn-primary" (click)="buscarReservas()">Buscar</button>
+  <button type="button" class="btn btn-primary" (click)="buscarPorReservante()">Buscar</button>
 </form>
 
 <table class="table">
@@ -19,29 +19,70 @@
     <tr>
       <th>Fecha Reserva</th>
       <th>Fecha Fin</th>
-      <th>Motivo de Reserva</th>
-      <th>Capacidad Requerida</th>
-      <th>Espacio</th>
-      <th>Reservante</th>
-      <th>Estado</th>
+      <th>ID Esp.</th>
+      <th>Nombre Esp.</th>
+      <th>ID Reservante</th>
+      <th>Nombre Reservante</th>
+      <th>Motivo</th>
+      <th>Cap. Requerida</th>
       <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
     <ng-container *ngIf="reservas.length > 0; else noReservas">
-      <tr *ngFor="let reserva of reservas">
-        <td>{{ reserva.fechaReserva }}</td>
-        <td>{{ reserva.fechaFin }}</td>
-        <td>{{ reserva.motivoReserva }}</td>
-        <td>{{ reserva.capacidadRequerida }}</td>
-        <td>{{ reserva.espacio }}</td>
-        <td>{{ reserva.reservante }}</td>
-        <td>{{ reserva.estado }}</td>
+      <tr *ngFor="let reserva of reservas; let i = index">
         <td>
-          <button *ngIf="!reserva.modoEditar" type="button" class="btn btn-primary" (click)="editarReserva(reserva)">Modificar</button>
-          <button *ngIf="!reserva.modoEditar" type="button" class="btn btn-danger" (click)="eliminarReserva(reserva.id)">Eliminar</button>
-          <button *ngIf="reserva.modoEditar" type="button" class="btn btn-success" (click)="guardarReserva(reserva)">Guardar</button>
-          <button *ngIf="reserva.modoEditar" type="button" class="btn btn-secondary" (click)="cancelarEdicion(reserva)">Cancelar</button>
+          <ng-container *ngIf="!modoEditar">{{ reserva.fechaReserva | date:'yyyy-MM-ddTHH:mm' }}</ng-container>
+          <ng-container *ngIf="modoEditar && i === indiceEditando">
+            <input type="datetime-local" [(ngModel)]="reservaEditando.fechaReserva">
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="!modoEditar">{{ reserva.fechaFinReserva | date:'yyyy-MM-ddTHH:mm' }}</ng-container>
+          <ng-container *ngIf="modoEditar && i === indiceEditando">
+            <input type="datetime-local" [(ngModel)]="reservaEditando.fechaFinReserva" />
+          </ng-container>
+        </td>
+        <td>
+          {{ reserva.espacioFisico.id }}
+        </td>
+        <td>
+          <ng-container *ngIf="!modoEditar">{{ reserva.espacioFisico.nombre }}</ng-container>
+          <ng-container *ngIf="modoEditar && i === indiceEditando">
+            <select class="form-control" [(ngModel)]="reservaEditando.espacioFisico.id">
+              <option *ngFor="let espacio of espacios" [value]="espacio.id">{{ espacio.nombre }}</option>
+            </select>
+          </ng-container>
+        </td>
+
+
+        <td>
+          {{ reserva.reservante.id }}
+        </td>
+        <td>
+        <ng-container *ngIf="!modoEditar">{{ reserva.reservante.nombre }} {{ reserva.reservante.apellido}}</ng-container>
+          <ng-container *ngIf="modoEditar && i === indiceEditando">
+            <select class="form-control" [(ngModel)]="reservaEditando.reservante.id">
+              <option *ngFor="let reservante of reservantes" [value]="reservante.id">{{ reservante.nombre }} {{reservante.apellido}}</option>
+            </select>
+          </ng-container>
+        </td>
+
+        <td>
+          <ng-container *ngIf="!modoEditar">{{ reserva.motivoReserva }}</ng-container>
+          <ng-container *ngIf="modoEditar && i === indiceEditando"><input type="text" [(ngModel)]="reservaEditando.motivoReserva"></ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="!modoEditar">{{ reserva.capacidadRequerida }}</ng-container>
+          <ng-container *ngIf="modoEditar && i === indiceEditando"><input type="number" [(ngModel)]="reservaEditando.capacidadRequerida"></ng-container>
+        </td>
+
+
+        <td>
+          <button *ngIf="!modoEditar" type="button" class="btn btn-primary" (click)="editarReserva(i)">Modificar</button>
+          <button *ngIf="!modoEditar" type="button" class="btn btn-danger" (click)="eliminarReserva(reserva)">Eliminar</button>
+          <button *ngIf="modoEditar && i === indiceEditando" type="button" class="btn btn-success" (click)="guardarReserva()">Guardar</button>
+          <button *ngIf="modoEditar && i === indiceEditando" type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
         </td>
       </tr>
     </ng-container>

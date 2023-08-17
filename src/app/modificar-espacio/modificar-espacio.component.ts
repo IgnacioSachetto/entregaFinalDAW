@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import Swal from 'sweetalert2';
 import { EspaciosService } from '../service/espacios.service';
 
 @Component({
@@ -20,6 +21,7 @@ export class ModificarEspacioComponent implements OnInit {
     this.obtenerEspacios();
   }
 
+  // Cargar la lista de espacios
   obtenerEspacios() {
     this.espaciosService.getEspacios().subscribe(
       (data) => {
@@ -31,15 +33,13 @@ export class ModificarEspacioComponent implements OnInit {
     );
   }
 
+  // Buscar espacios por ala
   buscarPorAla() {
-    const alaInput = (document.getElementById('filtroAla') as HTMLInputElement);
-    const nombreAla = alaInput.value;
-
-    if (nombreAla.trim() !== '') {
-      this.espaciosService.getEspaciosByAla(nombreAla).subscribe(
+    if (this.filtroAla.trim() !== '') {
+      this.espaciosService.getEspaciosByAla(this.filtroAla).subscribe(
         (data) => {
-          this.espacios = data; // Actualiza la lista de espacios con los datos encontrados
-          alaInput.value = '';
+          this.espacios = data;
+          this.filtroAla = '';
         },
         (error) => {
           console.error('Error al cargar los espacios por ala:', error);
@@ -48,16 +48,13 @@ export class ModificarEspacioComponent implements OnInit {
     }
   }
 
-
+  // Buscar espacios por capacidad
   buscarPorCapacidad() {
-    const capacidadInput = (document.getElementById('filtroCapacidad') as HTMLInputElement);
-    const capacidad = capacidadInput.value;
-
-    if (capacidad.trim() !== '') {
-      this.espaciosService.getEspaciosByCapacidad(Number(capacidad)).subscribe(
+    if (this.filtroCapacidad !== '') {
+      this.espaciosService.getEspaciosByCapacidad(Number(this.filtroCapacidad)).subscribe(
         (data) => {
           this.espacios = data;
-          capacidadInput.value = '';
+          this.filtroCapacidad = '';
         },
         (error) => {
           console.error('Error al cargar los espacios por capacidad:', error);
@@ -66,28 +63,40 @@ export class ModificarEspacioComponent implements OnInit {
     }
   }
 
-
+  // Editar un espacio
   editarEspacio(i: number) {
     this.modoEditar = true;
     this.indiceEditandoEspacio = i;
     this.espacioEditando = { ...this.espacios[i] };
   }
 
+  // Guardar los cambios de un espacio editado
   guardarEspacio() {
-    this.espaciosService.modificarEspacio(this.espacioEditando).subscribe(
-      (data) => {
-        console.log('Espacio actualizado correctamente:', data);
-        this.modoEditar = false;
-        this.indiceEditandoEspacio = -1;
-        this.espacioEditando = {};
-        this.obtenerEspacios();
-      },
-      (error) => {
-        console.error('Error al actualizar el espacio:', error);
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Se actualizará el espacio',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, Actualizar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.espaciosService.modificarEspacio(this.espacioEditando).subscribe(
+          (data) => {
+            console.log('Espacio actualizado correctamente:', data);
+            this.modoEditar = false;
+            this.indiceEditandoEspacio = -1;
+            this.espacioEditando = {};
+            this.obtenerEspacios();
+          },
+          (error) => {
+            console.error('Error al actualizar el espacio:', error);
+          }
+        );
       }
-    );
+    });
   }
-
+  // Eliminar un espacio
   eliminarEspacio(espacio: any) {
     this.espaciosService.eliminarEspacio(espacio.id).subscribe(
       (data) => {
@@ -106,6 +115,7 @@ export class ModificarEspacioComponent implements OnInit {
     );
   }
 
+  // Cancelar la edición de un espacio
   cancelarEdicionEspacio() {
     this.modoEditar = false;
     this.espacioEditando = {};
