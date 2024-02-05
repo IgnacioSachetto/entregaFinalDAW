@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlasService {
-  private urlBase: string = 'http://localhost:8080/Ala';
+  private urlBase: string = `${environment.apiBaseUrl}/Ala`;
 
   constructor(private http: HttpClient) { }
 

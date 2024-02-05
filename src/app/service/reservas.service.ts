@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReservasService {
-  private urlBase: string = 'http://localhost:8080/Reserva'; // Cambiar por la URL del backend
+  private urlBase: string = `${environment.apiBaseUrl}/Reserva`; // Cambiar por la URL del backend
 
   constructor(private http: HttpClient) { }
 

@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EspaciosService {
-  private urlBase: string = 'http://localhost:8080/EspacioFisico';
+  private urlBase: string = `${environment.apiBaseUrl}/EspacioFisico`;
 
   constructor(private http: HttpClient) { }
 
